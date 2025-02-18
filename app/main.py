@@ -1,27 +1,17 @@
 import os
-import json
-from PIL import Image
-
-import numpy as np
-import tensorflow as tf
-import streamlit as st
 import torch
 import torch.nn.functional as F
 import torchvision.transforms as transforms
+import streamlit as st
+from PIL import Image
 
-from utils import clean_image, get_prediction, make_results
-
-working_dir = os.path.dirname(os.path.abspath(__file__))
-# model_path = f"{working_dir}/trained_model/plant_disease_model.h5"
-model_full_path = f"{working_dir}/trained_model/plant-disease-model-full.pth"
-model_path = f"{working_dir}/trained_model/plant-disease-model.pth"
-
-class PlantDiseaseModel(torch.nn.Module):
-    def __init__(self, num_classes=14):  # Adjust based on your model
-        super(PlantDiseaseModel, self).__init__()
+# 🔹 Define ResNet9 model (Must match training architecture)
+class ResNet9(torch.nn.Module):
+    def __init__(self, num_classes=14):
+        super(ResNet9, self).__init__()
         self.conv1 = torch.nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)
         self.relu = torch.nn.ReLU()
-        self.fc = torch.nn.Linear(32 * 224 * 224, num_classes)  # Adjust based on architecture
+        self.fc = torch.nn.Linear(32 * 224 * 224, num_classes)
 
     def forward(self, x):
         x = self.conv1(x)
@@ -30,21 +20,28 @@ class PlantDiseaseModel(torch.nn.Module):
         x = self.fc(x)
         return x
 
+# 🔹 Get working directory
+working_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = f"{working_dir}/trained_model/plant-disease-model-full.pth"
+
+# ✅ Load Model and Register Class
 @st.cache_resource
 def load_model():
     try:
-        model = PlantDiseaseModel(num_classes=14)
-        model.load_state_dict(torch.load(model_full_path, map_location=torch.device("cpu")))
+        # ✅ Register ResNet9 so PyTorch recognizes it
+        torch.serialization.add_safe_globals([ResNet9])
+
+        # ✅ Load model
+        model = torch.load(model_path, map_location=torch.device("cpu"))
         model.eval()
-        print("✅ Model weights loaded successfully!")
+        print("✅ Full model loaded successfully!")
         return model
     except Exception as e:
         st.error(f"❌ Model failed to load: {e}")
         return None
 
-# 🔹 Load the model
 model = load_model()
-torch.save(model, model_full_path)
+
 
 
 # Define Preprocessing
