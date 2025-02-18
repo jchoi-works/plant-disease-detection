@@ -32,7 +32,7 @@ class PlantDiseaseModel(torch.nn.Module):
 # Load Model
 @st.cache_resource
 def load_model():
-    model_path = f"{working_dir}/plant-disease-model.pth"
+    model_path = f"{working_dir}/trained_model/plant-disease-model-full.pth"
 
     try:
         # ✅ Option 1: Load full model
