@@ -6,6 +6,7 @@ import numpy as np
 import tensorflow as tf
 import streamlit as st
 
+from utils import clean_image, get_prediction, make_results
 
 working_dir = os.path.dirname(os.path.abspath(__file__))
 model_path = f"{working_dir}/trained_model/plant_disease_model.h5"
@@ -38,7 +39,10 @@ def predict_image_class(model, image_path, class_indices):
     predictions = model.predict(preprocessed_img)
     predicted_class_index = np.argmax(predictions, axis=1)[0]
     predicted_class_name = class_indices[str(predicted_class_index)]
-    return predicted_class_name
+
+    result = make_results(predictions, predicted_class_index)
+    return result
+    # return predicted_class_name
 
 
 # Streamlit App
@@ -58,4 +62,5 @@ if uploaded_image is not None:
         if st.button('Check'):
             # Preprocess the uploaded image and predict the class
             prediction = predict_image_class(model, uploaded_image, class_indices)
-            st.success(f'Model Prediction: {str(prediction)}')
+            # st.success(f'Model Prediction: {str(prediction)}')
+            st.write(f"The plant {prediction['status']} with {prediction['prediction']} prediction.")
