@@ -81,5 +81,6 @@ if uploaded_image is not None:
         if st.button('Check'):
             # prediction = predict_image_class(model, uploaded_image, class_indices)
             result = predict_health_status(model, uploaded_image)
+            st.success(f"The plant {result['status']} with a {result['prediction']} prediction.")
             # st.success(f'Model Prediction: {str(prediction)}')
             # st.write(f"The plant {prediction['status']} with {prediction['prediction']} prediction.")
