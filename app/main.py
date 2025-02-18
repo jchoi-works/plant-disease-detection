@@ -13,8 +13,8 @@ from utils import clean_image, get_prediction, make_results
 
 working_dir = os.path.dirname(os.path.abspath(__file__))
 # model_path = f"{working_dir}/trained_model/plant_disease_model.h5"
-model_path = f"{working_dir}/trained_model/plant-disease-model-full.pth"
-
+model_full_path = f"{working_dir}/trained_model/plant-disease-model-full.pth"
+model_path = f"{working_dir}/trained_model/plant-disease-model.pth"
 
 class PlantDiseaseModel(torch.nn.Module):
     def __init__(self, num_classes=14):  # Adjust based on your model
@@ -34,7 +34,7 @@ class PlantDiseaseModel(torch.nn.Module):
 def load_model():
     try:
         model = PlantDiseaseModel(num_classes=14)
-        model.load_state_dict(torch.load("trained_model/plant-disease-weights.pth", map_location=torch.device("cpu")), strict=False)
+        model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")), strict=False)
         model.eval()
         print("✅ Model weights loaded successfully!")
         return model
