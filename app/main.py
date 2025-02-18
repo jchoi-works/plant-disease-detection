@@ -37,11 +37,11 @@ def load_and_preprocess_image(image_path, target_size=(224, 224)):
 def predict_image_class(model, image_path, class_indices):
     preprocessed_img = load_and_preprocess_image(image_path)
     predictions = model.predict(preprocessed_img)
-    predicted_class_index = np.array(np.argmax(predictions, axis=1)[0])
-
-    # predicted_class_name = class_indices[str(predicted_class_index)]
-
+    predicted_class_index = np.argmax(predictions, axis=1)[0]
+    predicted_class_name = class_indices[str(predicted_class_index)]
+    
     result = make_results(predictions, predicted_class_index)
+    print("AAA ", result)
     return result
     # return predicted_class_name
 
@@ -64,4 +64,4 @@ if uploaded_image is not None:
             # Preprocess the uploaded image and predict the class
             prediction = predict_image_class(model, uploaded_image, class_indices)
             # st.success(f'Model Prediction: {str(prediction)}')
-            st.write(f"The plant {prediction['status']} with {prediction['prediction']} prediction.")
+            st.success(f"The plant {prediction['status']} with {prediction['prediction']} prediction.")
