@@ -34,7 +34,7 @@ class PlantDiseaseModel(torch.nn.Module):
 def load_model():
     try:
         model = PlantDiseaseModel(num_classes=14)
-        model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")), strict=False)
+        model.load_state_dict(torch.load(model_full_path, map_location=torch.device("cpu")), strict=False)
         model.eval()
         print("✅ Model weights loaded successfully!")
         return model
@@ -44,6 +44,7 @@ def load_model():
 
 # 🔹 Load the model
 model = load_model()
+torch.save(model, model_full_path)
 
 
 # Define Preprocessing
