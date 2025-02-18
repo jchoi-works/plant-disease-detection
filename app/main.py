@@ -36,7 +36,7 @@ def load_model():
 
     try:
         # ✅ Option 1: Load full model
-        model = torch.load(model_path, map_location=torch.device("cpu"))
+        model = torch.load(model_path, map_location=torch.device("cpu"), weights_only=True)
     except:
         # ✅ Option 2: Load weights into defined architecture
         model = PlantDiseaseModel(num_classes=14)  # Adjust if needed
