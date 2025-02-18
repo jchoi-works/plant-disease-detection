@@ -15,15 +15,31 @@ working_dir = os.path.dirname(os.path.abspath(__file__))
 # model_path = f"{working_dir}/trained_model/plant_disease_model.h5"
 model_path = f"{working_dir}/trained_model/plant-disease-model-full.pth"
 
+
+class PlantDiseaseModel(torch.nn.Module):
+    def __init__(self, num_classes=14):  # Adjust based on your model
+        super(PlantDiseaseModel, self).__init__()
+        self.conv1 = torch.nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)
+        self.relu = torch.nn.ReLU()
+        self.fc = torch.nn.Linear(32 * 224 * 224, num_classes)  # Adjust based on architecture
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.relu(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc(x)
+        return x
+
 @st.cache_resource
 def load_model():
     try:
-        model = torch.load(model_path, map_location=torch.device("cpu"))
+        model = PlantDiseaseModel(num_classes=14)
+        model.load_state_dict(torch.load("trained_model/plant-disease-weights.pth", map_location=torch.device("cpu")), strict=False)
         model.eval()
-        print("✅ Model loaded successfully!")
+        print("✅ Model weights loaded successfully!")
         return model
     except Exception as e:
-        st.error(f"❌ Failed to load model: {e}")
+        st.error(f"❌ Model failed to load: {e}")
         return None
 
 # 🔹 Load the model
@@ -41,20 +57,7 @@ def preprocess_image(image):
     return image
 
 
-# Define model architecture (if using state_dict)
-# class PlantDiseaseModel(torch.nn.Module):
-#     def __init__(self, num_classes=14):  # Adjust based on your model
-#         super(PlantDiseaseModel, self).__init__()
-#         self.conv1 = torch.nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)
-#         self.relu = torch.nn.ReLU()
-#         self.fc = torch.nn.Linear(32 * 224 * 224, num_classes)  # Adjust based on architecture
 
-#     def forward(self, x):
-#         x = self.conv1(x)
-#         x = self.relu(x)
-#         x = x.view(x.size(0), -1)
-#         x = self.fc(x)
-#         return x
 
 
 
