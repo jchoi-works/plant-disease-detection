@@ -22,6 +22,7 @@ magicEnabled = true
 # Example: ['/home/user1/env', 'relative/path/to/folder']
 # Default: []
 folderWatchBlacklist = ['']
+maxUploadSize = 500
 
 # If false, will attempt to open a browser window on start.
 # Default: false unless (1) we are on a Linux box where DISPLAY is unset, or (2) server.liveSave is set.
