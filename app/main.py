@@ -29,6 +29,8 @@ class PlantDiseaseModel(torch.nn.Module):
         x = self.fc(x)
         return x
 
+torch.serialization.add_safe_globals([PlantDiseaseModel])
+
 # Load Model
 @st.cache_resource
 def load_model():
