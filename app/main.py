@@ -40,7 +40,7 @@ def load_model():
     except:
         # ✅ Option 2: Load weights into defined architecture
         model = PlantDiseaseModel(num_classes=14)  # Adjust if needed
-        model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))
+        model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu"), weights_only=True))
 
     model.eval()
     return model
