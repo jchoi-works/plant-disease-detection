@@ -37,8 +37,9 @@ def load_and_preprocess_image(image_path, target_size=(224, 224)):
 def predict_image_class(model, image_path, class_indices):
     preprocessed_img = load_and_preprocess_image(image_path)
     predictions = model.predict(preprocessed_img)
-    predicted_class_index = np.argmax(predictions, axis=1)[0]
-    predicted_class_name = class_indices[str(predicted_class_index)]
+    predicted_class_index = np.array(np.argmax(predictions, axis=1)[0])
+
+    # predicted_class_name = class_indices[str(predicted_class_index)]
 
     result = make_results(predictions, predicted_class_index)
     return result
